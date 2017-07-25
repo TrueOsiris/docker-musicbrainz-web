@@ -50,6 +50,7 @@ if [ ! -d /www/dump/mbdump ]; then
     echo "Uncompressing Musicbrainz mbdump.tar.bz2"
     tar xjf /www/dump/mbdump.tar.bz2 -C /www/dump/mbdump
 fi
+psql -h $PGHOST -p $PGPORT -U $PGUSER -l
 psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -c "CREATE SCHEMA musicbrainz"
    #psql -h postgresql -d musicbrainz -U $PGUSER -a -f Extensions.sql
    #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreateTables.sql
