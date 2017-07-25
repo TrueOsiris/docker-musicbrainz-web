@@ -5,6 +5,7 @@ docker create \
  -e PGHOST=postgres \
  -e PGPORT=5432 \
  -e PGUSER=musicbrainz \
+ -e PGPASS=musicbrainz \
  -e PGID=1001 \
  -e PUID=1001 \
  -e TZ=Europe/Brussels \
