@@ -27,6 +27,7 @@ RUN apt-get update \
                        php-mcrypt \
                        postgresql-client-9.5 \
                        postgresql-common \
+                       postgresql-server-dev-9.5 \
                        vim \
                        zip \
  && apt-get -f -y install \
