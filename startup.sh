@@ -17,7 +17,7 @@ else
            cp -TRv /tmp/www/ /www/
         fi   
         echo "Creating Musicbrainz database structure"
-        echo "postgresql:5432:musicbrainz:$POSTGRES_USER:$POSTGRES_PASSWORD"  > ~/.pgpass
+        echo "postgresql:5432:musicbrainz:$PGUSER:$PGPASS"  > ~/.pgpass
         chmod 0600 ~/.pgpass
         if [ ! -d /www/sqls ]; then
             mkdir -p /www/sqls
@@ -54,22 +54,22 @@ else
         fi
         
         
-           #psql -h postgresql -d musicbrainz -U $POSTGRES_USER -a -c "CREATE SCHEMA musicbrainz"
-           #psql -h postgresql -d musicbrainz -U $POSTGRES_USER -a -f Extensions.sql
-           #psql -h postgresql -d musicbrainz -U $POSTGRES_USER -a -f CreateTables.sql
+           #psql -h postgresql -d musicbrainz -U $PGUSER -a -c "CREATE SCHEMA musicbrainz"
+           #psql -h postgresql -d musicbrainz -U $PGUSER -a -f Extensions.sql
+           #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreateTables.sql
 
         #for f in mbdump/*
         #do
         #   tablename="${f:7}"
         #   echo "Importing $tablename table"
-        #   echo "psql -h postgresql -d musicbrainz -U $POSTGRES_USER -a -c COPY $tablename FROM '/tmp/$f'"
+        #   echo "psql -h postgresql -d musicbrainz -U $PGUSER -a -c COPY $tablename FROM '/tmp/$f'"
         #   chmod a+rX /tmp/$f
-        #   psql -h postgresql -d musicbrainz -U $POSTGRES_USER -a -c "\COPY $tablename FROM '/tmp/$f'"
+        #   psql -h postgresql -d musicbrainz -U $PGUSER -a -c "\COPY $tablename FROM '/tmp/$f'"
         #done
 
         #echo "Creating Indexes and Primary Keys"
-        #psql -h postgresql -d musicbrainz -U $POSTGRES_USER -a -f CreatePrimaryKeys.sql
-        #psql -h postgresql -d musicbrainz -U $POSTGRES_USER -a -f CreateIndexes.sql
+        #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreatePrimaryKeys.sql
+        #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreateIndexes.sql
            
         echo -e "Do not remove this file.\nIf you do, container will be fully reset on next start." > /www/$(echo $initfile)
         date >> /www/$(echo $initfile)
