@@ -24,16 +24,16 @@ else
         fi
         cd /www/sqls
         if [ ! -e "/www/sqls/Extensions.sql" ]; then
-            wget https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/Extensions.sql
+            wget --quiet https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/Extensions.sql
         fi
         if [ ! -e "/www/sqls/CreateTables.sql" ]; then 
-            wget https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/CreateTables.sql
+            wget --quiet https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/CreateTables.sql
         fi
         if [ ! -e "/www/sqls/CreatePrimaryKeys.sql" ]; then 
-            wget https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/CreatePrimaryKeys.sql
+            wget --quiet https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/CreatePrimaryKeys.sql
         fi
         if [ ! -e "/www/sqls/CreateIndexes.sql" ]; then
-            wget https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/CreateIndexes.sql
+            wget --quiet https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/CreateIndexes.sql
         fi
         echo "Downloading last Musicbrainz dump"
         if [ ! -d /www/dump ]; then
@@ -41,14 +41,14 @@ else
         fi
         cd /www/dump
         if [ ! -e "/www/dump/LATEST" ]; then
-            wget -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/LATEST
+            wget --quiet -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/LATEST
         fi
         LATEST="$(cat /www/dump/LATEST)"
         if [ ! -e "/www/dump/mbdump-derived.tar.bz2" ]; then
-            wget -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/$LATEST/mbdump-derived.tar.bz2
+            wget --quiet -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/$LATEST/mbdump-derived.tar.bz2
         fi
         if [ ! -e "/www/dump/mbdump.tar.bz2" ]; then
-            wget -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/$LATEST/mbdump.tar.bz2
+            wget --quiet -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/$LATEST/mbdump.tar.bz2
         fi
         if [ ! -d /www/dump/uncompressed ]; then
             mkdir /www/dump/uncompressed
