@@ -2,9 +2,9 @@
 
 set -e
 initfile=musicbrainz.initialised
-if [ -f /www/$(echo $initfile) ]; then
-        echo 'initial configuration done.'
-else    
+#if [ -f /www/$(echo $initfile) ]; then
+#        echo 'initial configuration done.'
+#else    
         ### run once at container start IF no initialization file.
         ### if the .initialised file is removed, the container    
         ### will be reset to it's default state, unless the www
@@ -76,4 +76,4 @@ else
            
         echo -e "Do not remove this file.\nIf you do, container will be fully reset on next start." > /www/$(echo $initfile)
         date >> /www/$(echo $initfile)
-fi
+#fi
