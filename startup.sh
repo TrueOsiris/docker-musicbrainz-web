@@ -59,8 +59,10 @@ if [ ! -d /www/dump/mbdump ]; then
    echo "Uncompressing Musicbrainz mbdump.tar.bz2"
    tar xjf /www/dump/mbdump.tar.bz2 -C /www/dump/mbdump
 fi
-psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -l
-psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -c "CREATE SCHEMA musicbrainz" 2>/dev/null
+#psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -l
+if [ $(psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -t -c "SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = 'musicbrainz');") == "f" ]; then
+   psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -c "CREATE SCHEMA musicbrainz"
+fi
    #psql -h postgresql -d musicbrainz -U $PGUSER -a -f Extensions.sql
    #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreateTables.sql
 
