@@ -21,6 +21,7 @@ RUN apt-get update \
                        php-mcrypt \
                        php7.0-gmp \
                        php7.0-pgsql \
+                       bzip2 \
  && apt-get -f -y install \
  && apt-get autoclean -y \
  && apt-get autoremove -y \
