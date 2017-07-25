@@ -2,6 +2,9 @@
 FROM quantumobject/docker-baseimage:latest
 MAINTAINER Tim Chaubet "tim@chaubet.be"
 
+#quantumobject is a bit late, so replacing xenial by zesty myself
+RUN sed 's/xenial/zesty/g' /etc/apt/sources.list
+
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
  && apt-get upgrade -y \
@@ -25,9 +28,9 @@ RUN apt-get update \
                        php7.0-gmp \
                        php7.0-pgsql \
                        php-mcrypt \
-                       postgresql-client-9.5 \
+                       postgresql-client-9.6 \
                        postgresql-common \
-                       postgresql-server-dev-9.5 \
+                       postgresql-server-dev-9.6 \
                        vim \
                        zip \
  && apt-get -f -y install \
