@@ -5,24 +5,29 @@ MAINTAINER Tim Chaubet "tim@chaubet.be"
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
  && apt-get upgrade -y \
- && apt-get install -y net-tools \
-                       iputils-ping \
-                       postgresql-client-9.5 \
-                       iptables \
+ && apt-get install -y apache2 \
                        bridge-utils \
-                       vim \
-                       libltdl7 \
-                       apache2 \
-                       php7.0 \
+                       build-essential \
+                       bzip2 \
+                       git-core \
+                       iptables \
+                       iputils-ping \
                        libapache2-mod-php7.0 \
+                       libdb-dev \
+                       libexpat1-dev \
+                       libicu-dev \
+                       libltdl7 \
+                       libpq-dev \
+                       libxml2-dev \
+                       net-tools \
+                       php7.0 \
                        php7.0-mbstring \
-                       zip \
-                       composer \
-                       libsodium18 \
-                       php-mcrypt \
                        php7.0-gmp \
                        php7.0-pgsql \
-                       bzip2 \
+                       php-mcrypt \
+                       postgresql-client-9.5 \
+                       vim \
+                       zip \
  && apt-get -f -y install \
  && apt-get autoclean -y \
  && apt-get autoremove -y \
@@ -32,6 +37,16 @@ RUN apt-get update \
 # copy base config files
 # these will be moved to the volumes using the startup script
 ADD www /tmp/www
+
+RUN git clone https://github.com/metabrainz/postgresql-musicbrainz-unaccent.git \
+ && git clone https://github.com/metabrainz/postgresql-musicbrainz-collate.git \
+ && cd postgresql-musicbrainz-unaccent \
+ && make \
+ && make install \
+ && cd ../postgresql-musicbrainz-collate \
+ && make \
+ && make install \
+ && cd ../
 
 ### startup scripts ###
 
