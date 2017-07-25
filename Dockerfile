@@ -20,6 +20,7 @@ RUN apt-get update \
                        libsodium18 \
                        php-mcrypt \
                        php7.0-gmp \
+                       php7.0-pgsql \
  && apt-get -f -y install \
  && apt-get autoclean -y \
  && apt-get autoremove -y \
@@ -50,7 +51,7 @@ RUN chmod +x /sbin/runonce; sync \
     && /bin/bash -c /sbin/runonce \
     && rm /sbin/runonce
 
-VOLUME ["/config]
+VOLUME ["/config", "/www"]
 
 COPY apache2.conf /etc/apache2/apache2.conf
 
