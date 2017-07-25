@@ -67,7 +67,7 @@ if [ $(psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -t -c "SELECT EXISTS
 else
    echo "database schema musicbrainz already exists"
 fi
-psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/Extensions.sql
+echo "psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/Extensions.sql"
    #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreateTables.sql
 
 #for f in mbdump/*
