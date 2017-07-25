@@ -6,52 +6,61 @@ if [ ! -d /www ]; then
    #cp /usr/share/javascript/jquery/jquery.min.js /synced/www/
    cp -TRv /tmp/www/ /www/
 fi   
-echo "Creating Musicbrainz database structure"
-echo "$PGHOST:$PGPORT:musicbrainz:$PGUSER:$PGPASS"  > ~/.pgpass
-chmod 0600 ~/.pgpass
+if [ ! -e ~/.pgpass ]; then
+   echo creating ~/.pgpass
+   echo "$PGHOST:$PGPORT:musicbrainz:$PGUSER:$PGPASS"  > ~/.pgpass
+   chmod 0600 ~/.pgpass
+fi
 if [ ! -d /www/sqls ]; then
-    mkdir -p /www/sqls
+   mkdir -p /www/sqls
 fi
 cd /www/sqls
 if [ ! -e "/www/sqls/Extensions.sql" ]; then
-    wget --quiet https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/Extensions.sql
+   echo grabbing Extensions.sql
+   wget --quiet https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/Extensions.sql
 fi
 if [ ! -e "/www/sqls/CreateTables.sql" ]; then 
-    wget --quiet https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/CreateTables.sql
+   echo grabbing CreateTables.sql
+   wget --quiet https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/CreateTables.sql
 fi
 if [ ! -e "/www/sqls/CreatePrimaryKeys.sql" ]; then 
-    wget --quiet https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/CreatePrimaryKeys.sql
+   echo grabbing CreatePrimaryKeys.sql
+   wget --quiet https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/CreatePrimaryKeys.sql
 fi
 if [ ! -e "/www/sqls/CreateIndexes.sql" ]; then
+   echo grabbing CreateIndexes.sql
     wget --quiet https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/CreateIndexes.sql
 fi
-echo "Downloading last Musicbrainz dump"
 if [ ! -d /www/dump ]; then
     mkdir -p /www/dump
+    echo "Downloading last Musicbrainz dump"
 fi
 cd /www/dump
 if [ ! -e "/www/dump/LATEST" ]; then
     wget --quiet -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/LATEST
+    echo "Latest version is $(cat /www/dump/LATEST)"
 fi
 LATEST="$(cat /www/dump/LATEST)"
 if [ ! -e "/www/dump/mbdump-derived.tar.bz2" ]; then
-    wget --quiet -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/$LATEST/mbdump-derived.tar.bz2
+   echo grabbing mbdump-derived.tar.bz2
+   wget --quiet -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/$LATEST/mbdump-derived.tar.bz2
 fi
 if [ ! -e "/www/dump/mbdump.tar.bz2" ]; then
-    wget --quiet -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/$LATEST/mbdump.tar.bz2
+   echo grabbing mbdump.tar.bz2
+   wget --quiet -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/$LATEST/mbdump.tar.bz2
 fi
 if [ ! -d /www/dump/mbdump-derived ]; then
-    mkdir /www/dump/mbdump-derived
-    echo "Uncompressing Musicbrainz mbdump-derived.tar.bz2"
-    tar xjf /www/dump/mbdump-derived.tar.bz2 -C /www/dump/mbdump-derived
+   mkdir /www/dump/mbdump-derived
+   echo "Uncompressing Musicbrainz mbdump-derived.tar.bz2"
+   tar xjf /www/dump/mbdump-derived.tar.bz2 -C /www/dump/mbdump-derived
 fi
 if [ ! -d /www/dump/mbdump ]; then
-    mkdir /www/dump/mbdump
-    echo "Uncompressing Musicbrainz mbdump.tar.bz2"
-    tar xjf /www/dump/mbdump.tar.bz2 -C /www/dump/mbdump
+   mkdir /www/dump/mbdump
+   echo "Uncompressing Musicbrainz mbdump.tar.bz2"
+   tar xjf /www/dump/mbdump.tar.bz2 -C /www/dump/mbdump
 fi
 psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -l
-psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -c "CREATE SCHEMA musicbrainz"
+psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -c "CREATE SCHEMA musicbrainz" 2>/dev/null
    #psql -h postgresql -d musicbrainz -U $PGUSER -a -f Extensions.sql
    #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreateTables.sql
 
