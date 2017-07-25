@@ -70,6 +70,7 @@ fi
 #sanitize sql files
 find /www/sqls/ -type f | xargs sed -i 's/CREATE TABLE IF NOT EXISTS/CREATE TABLE/g'
 find /www/sqls/ -type f | xargs sed -i 's/CREATE TABLE/CREATE TABLE IF NOT EXISTS/g'
+find /www/sqls/ -type f | xargs sed -i 's/\\set ON_ERROR_STOP 1/\\unset ON_ERROR_STOP 0/g'
 echo "psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/Extensions.sql"
    #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreateTables.sql
 
