@@ -7,7 +7,7 @@ if [ ! -d /www ]; then
    cp -TRv /tmp/www/ /www/
 fi   
 echo "Creating Musicbrainz database structure"
-echo "postgresql:5432:musicbrainz:$PGUSER:$PGPASS"  > ~/.pgpass
+echo "$PGHOST:$PGPORT:musicbrainz:$PGUSER:$PGPASS"  > ~/.pgpass
 chmod 0600 ~/.pgpass
 if [ ! -d /www/sqls ]; then
     mkdir -p /www/sqls
@@ -50,7 +50,7 @@ if [ ! -d /www/dump/mbdump ]; then
     echo "Uncompressing Musicbrainz mbdump.tar.bz2"
     tar xjf /www/dump/mbdump.tar.bz2 -C /www/dump/mbdump
 fi
-psql -h $PGHOST -p $PGPORT -U $PGUSER -l
+psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -l
 psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -c "CREATE SCHEMA musicbrainz"
    #psql -h postgresql -d musicbrainz -U $PGUSER -a -f Extensions.sql
    #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreateTables.sql
