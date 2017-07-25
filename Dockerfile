@@ -48,7 +48,7 @@ RUN git clone https://github.com/metabrainz/postgresql-musicbrainz-unaccent.git 
  && cd ../postgresql-musicbrainz-collate \
  && make \
  && make install \
- && cd ../
+ && cd ../ \
  && ln -s /usr/share/postgresql/9.5 /usr/share/postgresql/9.6
 
 ### startup scripts ###
