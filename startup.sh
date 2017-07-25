@@ -40,7 +40,9 @@ else
             mkdir -p /www/dump
         fi
         cd /www/dump
-        wget -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/LATEST
+        if [ ! -e "/www/dump/LATEST" ]; then
+            wget -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/LATEST
+        fi
         LATEST="$(cat /www/dump/LATEST)"
         if [ ! -e "/www/dump/mbdump-derived.tar.bz2" ]; then
             wget -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/$LATEST/mbdump-derived.tar.bz2
