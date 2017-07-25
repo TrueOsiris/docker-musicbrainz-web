@@ -44,16 +44,17 @@ else
         LATEST="$(cat /www/dump/LATEST)"
         if [ ! -f /www/dump/mbdump-derived.tar.bz2 ]; then
             wget -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/$LATEST/mbdump-derived.tar.bz2
-            echo "Uncompressing Musicbrainz mbdump-derived.tar.bz2"
-            tar xjf /www/dump/mbdump-derived.tar.bz2
         fi
         if [ ! -f /www/dump/mbdump.tar.bz2 ]; then
             wget -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/$LATEST/mbdump.tar.bz2
-            echo "Uncompressing Musicbrainz mbdump.tar.bz2"
-            tar xjf /www/dump/mbdump.tar.bz2
         fi
-        
-        
+        if [ ! -d /www/dump/uncompressed ]; then
+            mkdir /www/dump/uncompressed
+            echo "Uncompressing Musicbrainz mbdump-derived.tar.bz2"
+            tar xjf /www/dump/mbdump-derived.tar.bz2 -C /www/dump/uncompressed
+            echo "Uncompressing Musicbrainz mbdump.tar.bz2"
+            tar xjf /www/dump/mbdump.tar.bz2 -C /www/dump/uncompressed
+        fi
            #psql -h postgresql -d musicbrainz -U $PGUSER -a -c "CREATE SCHEMA musicbrainz"
            #psql -h postgresql -d musicbrainz -U $PGUSER -a -f Extensions.sql
            #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreateTables.sql
