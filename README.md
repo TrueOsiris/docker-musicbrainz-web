@@ -11,6 +11,7 @@ docker create \
  -e TZ=Europe/Brussels \
  -e HOST_HOSTNAME=$(hostname) \
  -e HOST_IP=$(ip addr show enp0s3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1) \
+ -e BRAINZCODE= \
  -p 4567:80 \
  -v /mnt/docker-dataset/musicbrainz/www:/www \
  --name musicbrainz-web \
