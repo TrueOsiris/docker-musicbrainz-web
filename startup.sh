@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-initfile=$(echo $HOST_HOSTNAME)\.initialised
+initfile=musicbrainz.initialised
 if [ -f /www/$(echo $initfile) ]; then
         echo 'initial configuration done.'
 else    
@@ -23,16 +23,16 @@ else
             mkdir -p /www/sqls
         fi
         cd /www/sqls
-        if [ ! -f /www/sqls/Extensions.sql ]; then
+        if [ ! -e "/www/sqls/Extensions.sql" ]; then
             wget https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/Extensions.sql
         fi
-        if [ ! -f /www/sqls/CreateTables.sql ]; then 
+        if [ ! -e "/www/sqls/CreateTables.sql" ]; then 
             wget https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/CreateTables.sql
         fi
-        if [ ! -f /www/sqls/CreatePrimaryKeys.sql ]; then 
+        if [ ! -e "/www/sqls/CreatePrimaryKeys.sql" ]; then 
             wget https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/CreatePrimaryKeys.sql
         fi
-        if [ ! -f /www/sqls/CreateIndexes.sql ]; then
+        if [ ! -e "/www/sqls/CreateIndexes.sql" ]; then
             wget https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/CreateIndexes.sql
         fi
         echo "Downloading last Musicbrainz dump"
@@ -42,10 +42,10 @@ else
         cd /www/dump
         wget -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/LATEST
         LATEST="$(cat /www/dump/LATEST)"
-        if [ ! -f /www/dump/mbdump-derived.tar.bz2 ]; then
+        if [ ! -e "/www/dump/mbdump-derived.tar.bz2" ]; then
             wget -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/$LATEST/mbdump-derived.tar.bz2
         fi
-        if [ ! -f /www/dump/mbdump.tar.bz2 ]; then
+        if [ ! -e "/www/dump/mbdump.tar.bz2" ]; then
             wget -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/$LATEST/mbdump.tar.bz2
         fi
         if [ ! -d /www/dump/uncompressed ]; then
