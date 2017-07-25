@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+initfile=musicbrainz.initialised
 if [ ! -d /www ]; then
    mkdir -p /www
    echo "<? header('Location: /test.php'); ?>" > /www/index.php
