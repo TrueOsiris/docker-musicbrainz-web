@@ -61,7 +61,10 @@ if [ ! -d /www/dump/mbdump ]; then
 fi
 #psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -l
 if [ $(psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -t -c "SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = 'musicbrainz');") == "f" ]; then
+   echo "creating database schema musicbrainz"
    psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -c "CREATE SCHEMA musicbrainz"
+else
+   echo "database schema musicbrainz already exists"
 fi
    #psql -h postgresql -d musicbrainz -U $PGUSER -a -f Extensions.sql
    #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreateTables.sql
