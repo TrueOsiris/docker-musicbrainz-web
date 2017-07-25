@@ -83,5 +83,5 @@ psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/Extensions.
 #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreatePrimaryKeys.sql
 #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreateIndexes.sql
            
-echo -e "Do not remove this file.\nIf you do, container will be fully reset on next start." > /www/$(echo $initfile)
+echo -e "Startup process completed.\nRun \"docker logs \[containername\]\" for details." > /www/$(echo $initfile)
 date >> /www/$(echo $initfile)
