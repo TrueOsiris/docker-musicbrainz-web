@@ -74,7 +74,7 @@ find /www/sqls/ -type f | xargs sed -i 's/\\set ON_ERROR_STOP 1/\\unset ON_ERROR
 echo "executing \"psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/Extensions.sql\""
 psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/Extensions.sql
 echo "executing \"psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/CreateTables.sql\""
-#psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/CreateTables.sql
+psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/CreateTables.sql
  
 
 #for f in mbdump/*
@@ -92,3 +92,4 @@ echo "executing \"psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /ww
            
 echo -e "Startup process completed.\nRun \"docker logs \[containername\]\" for details." > /www/$(echo $initfile)
 date >> /www/$(echo $initfile)
+echo $(cat $initfile)
