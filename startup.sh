@@ -1,4 +1,18 @@
 #!/bin/bash
+run_sql_file() {
+   if [ -n $PGHOST ]; then
+      if [ -n $PGPORT ]; then
+         port=$PGPORT
+      else 
+         port=5432
+      fi
+      echo "executing \"psql -h $PGHOST -p $port -d musicbrainz -U $PGUSER -a -f $1\""
+      psql -h $PGHOST -p $port -d musicbrainz -U $PGUSER -a -f $1
+   else
+      echo "executing \"psql -d musicbrainz -U $PGUSER -a -f $1\""
+      psql -d musicbrainz -U $PGUSER -a -f $1
+   fi
+}
 set -e
 initfile=musicbrainz.initialised
 if [ ! -d /www ]; then
@@ -73,19 +87,17 @@ find /www/sqls/ -type f | xargs sed -i 's/CREATE TABLE/CREATE TABLE IF NOT EXIST
 find /www/sqls/ -type f | xargs sed -i 's/\\set ON_ERROR_STOP 1/\\unset ON_ERROR_STOP/g'
 if [ -n $PGHOST ]; then
    echo "using environment variables PGHOST=$PGHOST and PGPORT=$PGPORT to run sql initialization statements..."
-   echo "executing \"psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/Extensions.sql\""
-   psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/Extensions.sql
-   echo "executing \"psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/CreateTables.sql\""
-   psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/CreateTables.sql
 else 
    echo "using --link as the target database to run sql initialization statements..."
-   echo "executing \"psql -d musicbrainz -U $PGUSER -a -f /www/sqls/Extensions.sql\""
-   psql -d musicbrainz -U $PGUSER -a -f /www/sqls/Extensions.sql
-   echo "executing \"psql -d musicbrainz -U $PGUSER -a -f /www/sqls/CreateTables.sql\""
-   psql -d musicbrainz -U $PGUSER -a -f /www/sqls/CreateTables.sql
 fi 
- 
+run_sql_file /www/sqls/Extensions.sql
+run_sql_file /www/sqls/CreateTables.sql
 
+#echo "executing \"psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/Extensions.sql\""
+#psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/Extensions.sql
+#echo "executing \"psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/CreateTables.sql\""
+#psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/CreateTables.sql
+   
 #for f in mbdump/*
 #do
 #   tablename="${f:7}"
