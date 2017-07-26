@@ -13,6 +13,10 @@ docker create \
  -p 5001:80 \
  -v /mnt/docker-dataset/musicbrainz/config:/config \
  -v /mnt/docker-dataset/musicbrainz/www:/www \
+ --link musicbrainz-database:postgres \
  --name musicbrainz-web \
  --restart=always \
  trueosiris/docker-musicbrainz
+
+Either set PGHOST & PGPORT or use --link to tag it to a databasecontainer (or even loadbalancer for a db). \
+If PGHOST is set, --link will be ignored.
