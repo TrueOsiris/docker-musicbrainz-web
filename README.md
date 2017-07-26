@@ -2,6 +2,7 @@
 
 [![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://registry.hub.docker.com/u/trueosiris/docker-musicbrainz-web/) 
 
+```
 docker create \
  -e PGDATABASE=musicbrainz \
  -e PGHOST=10.10.31.11 \
@@ -19,6 +20,7 @@ docker create \
  --name musicbrainz-web \
  --restart=always \
  trueosiris/docker-musicbrainz
+```
 
 Either set PGHOST & PGPORT or use --link to tag it to a databasecontainer (or even loadbalancer for a db). \
 If PGHOST is set, --link will be ignored.
