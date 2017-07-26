@@ -1,6 +1,5 @@
 # Musicbrainz docker
-FROM postgres:9.6
-#FROM quantumobject/docker-baseimage:latest
+FROM quantumobject/docker-baseimage:latest
 MAINTAINER Tim Chaubet "tim@chaubet.be"
 
 #quantumobject is a bit late, so replacing xenial by zesty myself
