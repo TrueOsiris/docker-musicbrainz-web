@@ -1,4 +1,6 @@
-# docker-musicbrainz
+# docker-musicbrainz-web
+
+[![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://registry.hub.docker.com/u/trueosiris/docker-musicbrainz-web/) 
 
 docker create \
  -e PGDATABASE=musicbrainz \
