@@ -13,6 +13,7 @@ RUN apt-get update \
                        build-essential \
                        bzip2 \
                        git-core \
+                       htop \
                        iptables \
                        iputils-ping \
                        libapache2-mod-php7.0 \
