@@ -95,18 +95,12 @@ if [ ! -d /www/dump/mbdump ]; then
    echo "Uncompressing Musicbrainz mbdump.tar.bz2"
    tar xjf /www/dump/mbdump.tar.bz2 -C /www/dump/mbdump
 fi
-#if [ $(psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -t -c "SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = 'musicbrainz');") == "f" ]; then
 if [ $(run_sql_query "t" "SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = 'musicbrainz');") == "f" ]; then
    echo "creating database schema musicbrainz"
    run_sql_query "a" "CREATE SCHEMA musicbrainz"
-   #psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -c "CREATE SCHEMA musicbrainz"
 else
    echo "database schema musicbrainz already exists"
 fi
-#sanitize sql files
-#find /www/sqls/ -type f | xargs sed -i 's/CREATE TABLE IF NOT EXISTS/CREATE TABLE/g'
-#find /www/sqls/ -type f | xargs sed -i 's/CREATE TABLE/CREATE TABLE IF NOT EXISTS/g'
-#find /www/sqls/ -type f | xargs sed -i 's/\\set ON_ERROR_STOP 1/\\unset ON_ERROR_STOP/g'
 find /www/sqls/ -type f -exec sanitize_sql_file "{}" \;
 if [ ! -z "{$PGHOST// }" ]; then
    echo "using environment variables PGHOST=$PGHOST and PGPORT=$PGPORT to run sql initialization statements..."
@@ -115,15 +109,14 @@ else
 fi 
 run_sql_file /www/sqls/Extensions.sql
 run_sql_file /www/sqls/CreateTables.sql
-   
-#for f in mbdump/*
-#do
-#   tablename="${f:7}"
-#   echo "Importing $tablename table"
-#   echo "psql -h postgresql -d musicbrainz -U $PGUSER -a -c COPY $tablename FROM '/tmp/$f'"
-#   chmod a+rX /tmp/$f
-#   psql -h postgresql -d musicbrainz -U $PGUSER -a -c "\COPY $tablename FROM '/tmp/$f'"
-#done
+for f in www/dump/mbdump/*
+do
+   tablename="${f:7}"
+   echo "Importing $tablename table"
+   echo "psql -h postgresql -d musicbrainz -U $PGUSER -a -c COPY $tablename FROM '/tmp/$f'"
+   chmod a+rX /tmp/$f
+   #psql -h postgresql -d musicbrainz -U $PGUSER -a -c "\COPY $tablename FROM '/tmp/$f'"
+done
 
 #echo "Creating Indexes and Primary Keys"
 #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreatePrimaryKeys.sql
