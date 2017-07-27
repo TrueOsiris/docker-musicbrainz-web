@@ -113,8 +113,8 @@ for f in /www/dump/extracted/mbdump/*
 do
    tablename="${f:7}"
    echo "Importing $tablename table"
-   echo "run_sql_query \"a\" \"COPY $tablename FROM '/www/dump/extracted/$f'\""
-   chmod a+rX /www/dump/extracted/$f
+   echo "run_sql_query \"a\" \"COPY $tablename FROM '$f'\""
+   chmod a+rX $f
    #psql -h postgresql -d musicbrainz -U $PGUSER -a -c "\COPY $tablename FROM '/www/dump/extracted/$f'"
 done
 cd ..
