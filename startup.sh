@@ -87,15 +87,12 @@ if [ ! -e "/www/dump/mbdump.tar.bz2" ]; then
    echo grabbing mbdump.tar.bz2
    wget --quiet -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/$LATEST/mbdump.tar.bz2
 fi
-if [ ! -d /www/dump/mbdump-derived ]; then
-   mkdir /www/dump/mbdump-derived
+if [ ! -d /www/dump/extracted ]; then
+   mkdir /www/dump/extracted
    echo "Uncompressing Musicbrainz mbdump-derived.tar.bz2"
-   tar xjf /www/dump/mbdump-derived.tar.bz2 -C /www/dump/mbdump-derived
-fi
-if [ ! -d /www/dump/mbdump ]; then
-   mkdir /www/dump/mbdump
+   tar xjf /www/dump/mbdump-derived.tar.bz2 -C /www/dump/extracted
    echo "Uncompressing Musicbrainz mbdump.tar.bz2"
-   tar xjf /www/dump/mbdump.tar.bz2 -C /www/dump/mbdump
+   tar xjf /www/dump/mbdump.tar.bz2 -C /www/dump/extracted
 fi
 if [ $(run_sql_query "t" "SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = 'musicbrainz');") == "f" ]; then
    echo "creating database schema musicbrainz"
@@ -111,14 +108,16 @@ else
 fi 
 run_sql_file /www/sqls/Extensions.sql
 run_sql_file /www/sqls/CreateTables.sql
-for f in www/dump/mbdump/*
+cd /www/dump/extracted
+for f in www/dump/extracted/mbdump/*
 do
    tablename="${f:7}"
    echo "Importing $tablename table"
-   echo "psql -h postgresql -d musicbrainz -U $PGUSER -a -c COPY $tablename FROM '/tmp/$f'"
+   echo "run_sql_query \"a\" \"COPY $tablename FROM '/tmp/$f'\""
    chmod a+rX /tmp/$f
    #psql -h postgresql -d musicbrainz -U $PGUSER -a -c "\COPY $tablename FROM '/tmp/$f'"
 done
+cd ..
 
 #echo "Creating Indexes and Primary Keys"
 #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreatePrimaryKeys.sql
