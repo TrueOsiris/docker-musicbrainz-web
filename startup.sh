@@ -130,6 +130,6 @@ run_sql_file /www/sqls/CreateTables.sql
 #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreatePrimaryKeys.sql
 #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreateIndexes.sql
            
-echo -e "Startup process completed.\nRun \"docker logs \[containername\]\" for details." > /www/$(echo $initfile)
+echo -e "Startup process completed.\nRun \"docker logs [containername]\" for details." > /www/$(echo $initfile)
 date >> /www/$(echo $initfile)
 echo $(cat /www/$initfile)
