@@ -109,13 +109,13 @@ fi
 run_sql_file /www/sqls/Extensions.sql
 run_sql_file /www/sqls/CreateTables.sql
 cd /www/dump/extracted
-for f in www/dump/extracted/mbdump/*
+for f in /www/dump/extracted/mbdump/*
 do
    tablename="${f:7}"
    echo "Importing $tablename table"
-   echo "run_sql_query \"a\" \"COPY $tablename FROM '/tmp/$f'\""
-   chmod a+rX /tmp/$f
-   #psql -h postgresql -d musicbrainz -U $PGUSER -a -c "\COPY $tablename FROM '/tmp/$f'"
+   echo "run_sql_query \"a\" \"COPY $tablename FROM '/www/dump/extracted/$f'\""
+   chmod a+rX /www/dump/extracted/$f
+   #psql -h postgresql -d musicbrainz -U $PGUSER -a -c "\COPY $tablename FROM '/www/dump/extracted/$f'"
 done
 cd ..
 
