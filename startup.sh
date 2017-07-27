@@ -8,7 +8,7 @@ initfile=musicbrainz.initialised
 
 ### functions
 run_sql_file() {
-   if [ ! -z "{$PGHOST// }" ]; then
+   if [ ! -z "${PGHOST// }" ]; then
       echo "executing \"psql -h $dbhost -p $port -d musicbrainz -U $PGUSER -a -f $1\""
       psql -q -h $dbhost -p $port -d musicbrainz -U $PGUSER -a -f $1
    else
@@ -16,13 +16,15 @@ run_sql_file() {
       psql -q -d musicbrainz -U $PGUSER -a -f $1
    fi
 }
+export -f run_sql_file
 run_sql_query() {
-   if [ ! -z "{$PGHOST// }" ]; then
+   if [ ! -z "${PGHOST// }" ]; then
       psql -q -h $dbhost -p $port -d musicbrainz -U $PGUSER -$1 -c "$2"
    else
       psql -q -d musicbrainz -U $PGUSER -$1 -c "$2"
    fi
 }
+export -f run_sql_query
 sanitize_sql_file() {
    sed -i 's/CREATE TABLE IF NOT EXISTS/CREATE TABLE/g' $1
    sed -i 's/CREATE TABLE/CREATE TABLE IF NOT EXISTS/g' $1
@@ -33,9 +35,9 @@ sanitize_sql_file() {
    sed -i 's/\t/ /g;s/ \+/ /g' $1 
    sed -i -r -e 's/(CREATE|ALTER)/\n\n&/g' $1
 }
+export -f sanitize_sql_file
 
-
-
+### BEGIN
 if [ ! -d /www ]; then
    mkdir -p /www
    echo "<? header('Location: /test.php'); ?>" > /www/index.php
@@ -101,9 +103,9 @@ if [ $(run_sql_query "t" "SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname
 else
    echo "database schema musicbrainz already exists"
 fi
-find /www/sqls/ -type f -exec sanitize_sql_file "{}" \;
-if [ ! -z "{$PGHOST// }" ]; then
-   echo "using environment variables PGHOST=$PGHOST and PGPORT=$PGPORT to run sql initialization statements..."
+find /www/sqls/ -type f -exec bash -c 'sanitize_sql_file "{}"' \;
+if [ ! -z "${PGHOST// }" ]; then
+   echo "using environment variables PGHOST=$dbhost and PGPORT=$port to run sql initialization statements..."
 else 
    echo "using --link as the target database to run sql initialization statements..."
 fi 
