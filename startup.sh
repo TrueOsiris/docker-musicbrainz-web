@@ -98,15 +98,15 @@ else
    run_sql_file /www/sqls/Extensions.sql
    run_sql_file /www/sqls/CreateTables.sql
    cd /www/dump/extracted
-   for f in /www/dump/extracted/mbdump/*
+   for f in mbdump/*
    do
       tablename="${f:7}"
       echo "Importing $tablename table"
-      echo "run_sql_query \"a\" \"COPY $tablename FROM '$f'\""
+      echo "run_sql_query \"a\" \"COPY $tablename FROM '/www/dump/extracted/$f'\""
       chmod a+rX $f
-      run_sql_query "t" "\COPY $tablename FROM '$f'"
+      run_sql_query "t" "\COPY $tablename FROM '/www/dump/extracted/$f'"
    done
-   cd ..
+   cd /
 
    #echo "Creating Indexes and Primary Keys"
    run_sql_file /www/sqls/CreatePrimaryKeys.sql
