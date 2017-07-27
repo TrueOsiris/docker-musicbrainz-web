@@ -9,21 +9,12 @@ initfile=musicbrainz.initialised
 
 ### functions
 run_sql_file() {
-   if [ ! -z "${PGHOST// }" ]; then
-      echo "executing \"psql -h $dbhost -p $port -d musicbrainz -U $PGUSER -a -f $1\""
-      PGOPTIONS='--client-min-messages=warning' psql -q -h $dbhost -p $port -d musicbrainz -U $PGUSER -a -f $1
-   else
-      echo "executing \"psql -d musicbrainz -U $PGUSER -a -f $1\""
-      PGOPTIONS='--client-min-messages=warning' psql -q -d musicbrainz -U $PGUSER -a -f $1
-   fi
+   echo "executing \"psql -h $dbhost -p $port -d musicbrainz -U $PGUSER -a -f $1\""
+   PGOPTIONS='--client-min-messages=warning' psql -q -h $dbhost -p $port -d musicbrainz -U $PGUSER -a -f $1
 }
 export -f run_sql_file
 run_sql_query() {
-   if [ ! -z "${PGHOST// }" ]; then
-      PGOPTIONS='--client-min-messages=warning' psql -q -h $dbhost -p $port -d musicbrainz -U $PGUSER -$1 -c "$2"
-   else
-      PGOPTIONS='--client-min-messages=warning' psql -q -d musicbrainz -U $PGUSER -$1 -c "$2"
-   fi
+   PGOPTIONS='--client-min-messages=warning' psql -q -h $dbhost -p $port -d musicbrainz -U $PGUSER -$1 -c "$2"
 }
 export -f run_sql_query
 sanitize_sql_file() {
@@ -104,11 +95,6 @@ else
       echo "database schema musicbrainz already exists"
    fi
    find /www/sqls/ -type f -exec bash -c 'sanitize_sql_file "{}"' \;
-   if [ ! -z "${PGHOST// }" ]; then
-      echo "using environment variables PGHOST=$dbhost and PGPORT=$port to run sql initialization statements..."
-   else 
-      echo "using --link as the target database to run sql initialization statements..."
-   fi 
    run_sql_file /www/sqls/Extensions.sql
    run_sql_file /www/sqls/CreateTables.sql
    cd /www/dump/extracted
@@ -118,13 +104,13 @@ else
       echo "Importing $tablename table"
       echo "run_sql_query \"a\" \"COPY $tablename FROM '$f'\""
       chmod a+rX $f
-      #psql -h postgresql -d musicbrainz -U $PGUSER -a -c "\COPY $tablename FROM '/www/dump/extracted/$f'"
+      run_sql_query "t" "\COPY $tablename FROM '$f'"
    done
    cd ..
 
    #echo "Creating Indexes and Primary Keys"
-   #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreatePrimaryKeys.sql
-   #psql -h postgresql -d musicbrainz -U $PGUSER -a -f CreateIndexes.sql
+   run_sql_file /www/sqls/CreatePrimaryKeys.sql
+   run_sql_file /www/sqls/CreateIndexes.sql
 fi           
 echo -e "Startup process completed.\nRun \"docker logs [containername]\" for details." > /www/$(echo $initfile)
 date >> /www/$(echo $initfile)
