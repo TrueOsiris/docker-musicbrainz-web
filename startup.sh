@@ -3,8 +3,8 @@ set -e
 
 ### variables
 initfile=musicbrainz.initialised
-[[ -z "${PGPORT// }" ]] && port=5432 || port=$PGPORT
-[[ -z "${PGHOST// }" ]] && dbhost="musicbrainz-database" || dbhost=$PGHOST
+[[ -z "${PGPORT// }" ]] && port=$POSTGRES_PORT_5432_TCP_PORT || port=$PGPORT
+[[ -z "${PGHOST// }" ]] && dbhost=$POSTGRES_PORT_5432_TCP_ADDR || dbhost=$PGHOST
 
 ### functions
 run_sql_file() {
