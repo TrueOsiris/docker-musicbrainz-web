@@ -23,6 +23,12 @@ run_sql_query() {
       psql -d musicbrainz -U $PGUSER -$1 -c "$2"
    fi
 }
+sanitize_sql_file() {
+   sed -i 's/CREATE TABLE IF NOT EXISTS/CREATE TABLE/g' $1
+   sed -i 's/CREATE TABLE/CREATE TABLE IF NOT EXISTS/g' $1
+   sed -i 's/\\set ON_ERROR_STOP 1/\\unset ON_ERROR_STOP/g $1
+   cat $1 | sed 's/\-\-.*$//g' | awk 1 ORS=' ' | sed 's/\t/ /g;s/ \+/ /g' | sed -r -e 's/(CREATE|ALTER)/\n\n&/g' > $1
+}
 
 
 
@@ -94,9 +100,10 @@ else
    echo "database schema musicbrainz already exists"
 fi
 #sanitize sql files
-find /www/sqls/ -type f | xargs sed -i 's/CREATE TABLE IF NOT EXISTS/CREATE TABLE/g'
-find /www/sqls/ -type f | xargs sed -i 's/CREATE TABLE/CREATE TABLE IF NOT EXISTS/g'
-find /www/sqls/ -type f | xargs sed -i 's/\\set ON_ERROR_STOP 1/\\unset ON_ERROR_STOP/g'
+#find /www/sqls/ -type f | xargs sed -i 's/CREATE TABLE IF NOT EXISTS/CREATE TABLE/g'
+#find /www/sqls/ -type f | xargs sed -i 's/CREATE TABLE/CREATE TABLE IF NOT EXISTS/g'
+#find /www/sqls/ -type f | xargs sed -i 's/\\set ON_ERROR_STOP 1/\\unset ON_ERROR_STOP/g'
+find /www/sqls/ -type f -exec sanitize_sql_file "{}" \;
 if [ ! -z "{$PGHOST// }" ]; then
    echo "using environment variables PGHOST=$PGHOST and PGPORT=$PGPORT to run sql initialization statements..."
 else 
