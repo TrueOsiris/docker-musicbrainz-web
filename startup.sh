@@ -27,7 +27,10 @@ sanitize_sql_file() {
    sed -i 's/CREATE TABLE IF NOT EXISTS/CREATE TABLE/g' $1
    sed -i 's/CREATE TABLE/CREATE TABLE IF NOT EXISTS/g' $1
    sed -i 's/\\set ON_ERROR_STOP 1/\\unset ON_ERROR_STOP/g' $1
-   cat $1 | sed 's/\-\-.*$//g' | awk 1 ORS=' ' | sed 's/\t/ /g;s/ \+/ /g' | sed -r -e 's/(CREATE|ALTER)/\n\n&/g' > $1
+   sed -i 's/\-\-.*$//g' $1
+   sed -i -r -e 's/\n/ /g' $1
+   sed -i 's/\t/ /g;s/ \+/ /g' $1 
+   sed -i -r -e 's/(CREATE|ALTER)/\n\n&/g' $1
 }
 
 
