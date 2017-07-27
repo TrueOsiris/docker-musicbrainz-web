@@ -10,17 +10,17 @@ initfile=musicbrainz.initialised
 run_sql_file() {
    if [ ! -z "{$PGHOST// }" ]; then
       echo "executing \"psql -h $dbhost -p $port -d musicbrainz -U $PGUSER -a -f $1\""
-      psql -h $dbhost -p $port -d musicbrainz -U $PGUSER -a -f $1
+      psql -q -h $dbhost -p $port -d musicbrainz -U $PGUSER -a -f $1
    else
       echo "executing \"psql -d musicbrainz -U $PGUSER -a -f $1\""
-      psql -d musicbrainz -U $PGUSER -a -f $1
+      psql -q -d musicbrainz -U $PGUSER -a -f $1
    fi
 }
 run_sql_query() {
    if [ ! -z "{$PGHOST// }" ]; then
-      psql -h $dbhost -p $port -d musicbrainz -U $PGUSER -$1 -c "$2"
+      psql -q -h $dbhost -p $port -d musicbrainz -U $PGUSER -$1 -c "$2"
    else
-      psql -d musicbrainz -U $PGUSER -$1 -c "$2"
+      psql -q -d musicbrainz -U $PGUSER -$1 -c "$2"
    fi
 }
 sanitize_sql_file() {
@@ -115,11 +115,6 @@ else
 fi 
 run_sql_file /www/sqls/Extensions.sql
 run_sql_file /www/sqls/CreateTables.sql
-
-#echo "executing \"psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/Extensions.sql\""
-#psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/Extensions.sql
-#echo "executing \"psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/CreateTables.sql\""
-#psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -f /www/sqls/CreateTables.sql
    
 #for f in mbdump/*
 #do
