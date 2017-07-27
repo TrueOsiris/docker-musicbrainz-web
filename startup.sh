@@ -86,7 +86,7 @@ if [ ! -d /www/dump/mbdump ]; then
    tar xjf /www/dump/mbdump.tar.bz2 -C /www/dump/mbdump
 fi
 #if [ $(psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -t -c "SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = 'musicbrainz');") == "f" ]; then
-if [ $(run_sql_query "t" "SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = 'musicbrainz');") ]; then
+if [ $(run_sql_query "t" "SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = 'musicbrainz');") == "f" ]; then
    echo "creating database schema musicbrainz"
    run_sql_query "a" "CREATE SCHEMA musicbrainz"
    #psql -h $PGHOST -p $PGPORT -d musicbrainz -U $PGUSER -a -c "CREATE SCHEMA musicbrainz"
