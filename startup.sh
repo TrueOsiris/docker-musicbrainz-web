@@ -10,18 +10,18 @@ initfile=musicbrainz.initialised
 run_sql_file() {
    if [ ! -z "${PGHOST// }" ]; then
       echo "executing \"psql -h $dbhost -p $port -d musicbrainz -U $PGUSER -a -f $1\""
-      psql -q -h $dbhost -p $port -d musicbrainz -U $PGUSER -a -f $1
+      PGOPTIONS='--client-min-messages=warning' psql -q -h $dbhost -p $port -d musicbrainz -U $PGUSER -a -f $1
    else
       echo "executing \"psql -d musicbrainz -U $PGUSER -a -f $1\""
-      psql -q -d musicbrainz -U $PGUSER -a -f $1
+      PGOPTIONS='--client-min-messages=warning' psql -q -d musicbrainz -U $PGUSER -a -f $1
    fi
 }
 export -f run_sql_file
 run_sql_query() {
    if [ ! -z "${PGHOST// }" ]; then
-      psql -q -h $dbhost -p $port -d musicbrainz -U $PGUSER -$1 -c "$2"
+      PGOPTIONS='--client-min-messages=warning' psql -q -h $dbhost -p $port -d musicbrainz -U $PGUSER -$1 -c "$2"
    else
-      psql -q -d musicbrainz -U $PGUSER -$1 -c "$2"
+      PGOPTIONS='--client-min-messages=warning' psql -q -d musicbrainz -U $PGUSER -$1 -c "$2"
    fi
 }
 export -f run_sql_query
@@ -30,7 +30,6 @@ sanitize_sql_file() {
    sed -i 's/CREATE TABLE/CREATE TABLE IF NOT EXISTS/g' $1
    sed -i 's/\\set ON_ERROR_STOP 1/\\unset ON_ERROR_STOP/g' $1
    sed -i 's/\-\-.*$//g' $1
-   #sed -i -r -e 's/\n/ /g' $1
    sed -i ':a;N;$!ba;s/\n/ /g' $1
    sed -i 's/\t/ /g;s/ \+/ /g' $1 
    sed -i -r -e 's/(CREATE|ALTER)/\n\n&/g' $1
