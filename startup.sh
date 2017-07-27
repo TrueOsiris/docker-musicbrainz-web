@@ -125,4 +125,4 @@ run_sql_file /www/sqls/CreateTables.sql
            
 echo -e "Startup process completed.\nRun \"docker logs \[containername\]\" for details." > /www/$(echo $initfile)
 date >> /www/$(echo $initfile)
-echo $(cat $initfile)
+echo $(cat /www/$initfile)
