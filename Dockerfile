@@ -12,6 +12,7 @@ RUN apt-get update \
                        bridge-utils \
                        build-essential \
                        bzip2 \
+                       cpanminus \
                        git-core \
                        htop \
                        iptables \
@@ -20,6 +21,7 @@ RUN apt-get update \
                        libdb-dev \
                        libexpat1-dev \
                        libicu-dev \
+                       liblocal-lib-perl \
                        libltdl7 \
                        libpq-dev \
                        libxml2-dev \
@@ -47,15 +49,23 @@ RUN apt-get update \
 # these will be moved to the volumes using the startup script
 ADD www /tmp/www
 
-RUN git clone https://github.com/metabrainz/postgresql-musicbrainz-unaccent.git \
+RUN echo "Getting musicbrain git packages." \
+ && git clone https://github.com/metabrainz/postgresql-musicbrainz-unaccent.git \
  && git clone https://github.com/metabrainz/postgresql-musicbrainz-collate.git \
+ && git clone --recursive git://github.com/metabrainz/musicbrainz-server.git \
  && cd postgresql-musicbrainz-unaccent \
  && make \
  && make install \
  && cd ../postgresql-musicbrainz-collate \
  && make \
  && make install \
- && cd ../ 
+ && cd ../musicbrainz-server \
+ && cp lib/DBDefs.pm.sample lib/DBDefs.pm \
+ && echo 'eval $( perl -Mlocal::lib )' >> ~/.bashrc \
+ && source ~/.bashrc \
+ && cpanm --installdeps --notest . \
+ && npm install 
+ 
 
 ### startup scripts ###
 
