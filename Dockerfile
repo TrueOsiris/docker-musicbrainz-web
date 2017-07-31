@@ -63,7 +63,7 @@ RUN echo "Getting musicbrain git packages." \
  && cd musicbrainz-server \
  && cp lib/DBDefs.pm.sample lib/DBDefs.pm 
 RUN echo 'eval $( perl -Mlocal::lib )' >> ~/.bashrc 
-RUN source ~/.bashrc 
+RUN /bin/bash -c "source ~/.bashrc" 
 RUN cpanm --installdeps --notest . 
 RUN npm install 
  
