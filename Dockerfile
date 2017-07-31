@@ -50,6 +50,8 @@ RUN apt-get update \
 # these will be moved to the volumes using the startup script
 ADD www /tmp/www
 
+RUN npm install -g npm
+
 RUN echo "Getting musicbrain git packages." \
  && git clone https://github.com/metabrainz/postgresql-musicbrainz-unaccent.git \
  && git clone https://github.com/metabrainz/postgresql-musicbrainz-collate.git \
