@@ -61,11 +61,11 @@ RUN echo "Getting musicbrain git packages." \
  && make install \
  && cd .. \
  && cd musicbrainz-server \
- && cp lib/DBDefs.pm.sample lib/DBDefs.pm 
-RUN echo 'eval $( perl -Mlocal::lib )' >> ~/.bashrc 
-RUN /bin/bash -c "source ~/.bashrc" 
-RUN cpanm --installdeps --notest . 
-RUN npm install 
+ && cp lib/DBDefs.pm.sample lib/DBDefs.pm \
+ && echo 'eval $( perl -Mlocal::lib )' >> ~/.bashrc \ 
+ && /bin/bash -c "source ~/.bashrc" 
+#RUN cpanm --installdeps --notest . 
+#RUN npm install 
  
 
 ### startup scripts ###
