@@ -24,6 +24,8 @@ RUN apt-get update \
                        libpq-dev \
                        libxml2-dev \
                        net-tools \
+                       nodejs \
+                       npm \
                        php7.0 \
                        php7.0-mbstring \
                        php7.0-gmp \
@@ -32,6 +34,7 @@ RUN apt-get update \
                        postgresql-client-9.6 \
                        postgresql-common \
                        postgresql-server-dev-9.6 \
+                       redis-server \
                        vim \
                        zip \
  && apt-get -f -y install \
