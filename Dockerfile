@@ -87,7 +87,7 @@ RUN chmod +x /sbin/runonce; sync \
     && /bin/bash -c /sbin/runonce \
     && rm /sbin/runonce
 
-VOLUME ["/config", "/www"]
+VOLUME ["/www"]
 
 COPY apache2.conf /etc/apache2/apache2.conf
 
