@@ -101,8 +101,7 @@ else
    for f in mbdump/*
    do
       tablename="${f:7}"
-      echo "Importing $tablename table"
-      echo "run_sql_query \"a\" \"COPY $tablename FROM '/www/dump/extracted/$f'\""
+      echo "Importing $tablename table using run_sql_query \"t\" \"COPY $tablename FROM '/www/dump/extracted/$f'\""
       chmod a+rX $f
       run_sql_query "t" "\COPY $tablename FROM '/www/dump/extracted/$f'"
    done
