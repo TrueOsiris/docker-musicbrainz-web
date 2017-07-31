@@ -27,6 +27,7 @@ RUN apt-get update \
                        libxml2-dev \
                        net-tools \
                        nodejs \
+                       nodejs-legacy \
                        npm \
                        php7.0 \
                        php7.0-mbstring \
