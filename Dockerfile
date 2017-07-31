@@ -59,9 +59,8 @@ RUN echo "Getting musicbrain git packages." \
  && cd ../postgresql-musicbrainz-collate \
  && make \
  && make install \
- && cd ..
-
-RUN cd musicbrainz-server \
+ && cd .. \
+ && cd musicbrainz-server \
  && cp lib/DBDefs.pm.sample lib/DBDefs.pm 
 RUN echo 'eval $( perl -Mlocal::lib )' >> ~/.bashrc \
  && source ~/.bashrc 
