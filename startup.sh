@@ -98,13 +98,15 @@ else
    run_sql_file /www/sqls/Extensions.sql
    run_sql_file /www/sqls/CreateTables.sql
    cd /www/dump/extracted
-   for f in mbdump/*
-   do
-      tablename="${f:7}"
-      echo "Importing $tablename table using run_sql_query \"t\" \"COPY $tablename FROM '/www/dump/extracted/$f'\""
-      chmod a+rX $f
-      run_sql_query "t" "\COPY $tablename FROM '/www/dump/extracted/$f'"
-   done
+   if [ ! $(run_sql_query "t" "SELECT COUNT(*) FROM alternative_release_type;") == "3" ]; then
+      for f in mbdump/*
+      do
+         tablename="${f:7}"
+         echo "Importing $tablename table using run_sql_query \"t\" \"COPY $tablename FROM '/www/dump/extracted/$f'\""
+         chmod a+rX $f
+         run_sql_query "t" "\COPY $tablename FROM '/www/dump/extracted/$f'"
+      done
+   fi
    cd /
    echo "Creating Indexes and Primary Keys"
    run_sql_file /www/sqls/CreatePrimaryKeys.sql
