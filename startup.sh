@@ -111,6 +111,8 @@ else
    run_sql_file /www/sqls/CreateIndexes.sql
 fi 
 echo "Replace entries in /musicbrainz-server/lib/DBDefs.pm dependant on docker environment variables."
+sed -i 's/^[\ \t]\+database[\ \t]\+=>[\ \t]\+"musicbrainz_db"/database \=\> \"musicbrainz\"/g' /musicbrainz-server/lib/DBDefs.pm
+sed -i 's/^[\ \t]\+username[\ \t]\+=>[\ \t]\+"musicbrainz"/username \=\> \"'"$PGUSER"'\"/g' /musicbrainz-server/lib/DBDefs.pm
 sed -i 's/^\#[\ \t]\+host[\ \t]\+=>[\ \t]\+""/host \=\> \"'"$host"'\"/g' /musicbrainz-server/lib/DBDefs.pm
 sed -i 's/^\#[\ \t]\+port[\ \t]\+=>[\ \t]\+""/port \=\> \"'"$port"'\"/g' /musicbrainz-server/lib/DBDefs.pm
 if [ ! -f /www/$(echo $initfile) ]; then
