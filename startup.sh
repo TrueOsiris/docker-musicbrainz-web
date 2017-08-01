@@ -106,10 +106,12 @@ else
       run_sql_query "t" "\COPY $tablename FROM '/www/dump/extracted/$f'"
    done
    cd /
-
-   #echo "Creating Indexes and Primary Keys"
+   echo "Creating Indexes and Primary Keys"
    run_sql_file /www/sqls/CreatePrimaryKeys.sql
    run_sql_file /www/sqls/CreateIndexes.sql
+   cd /musicbrainz-server
+   cpanm --installdeps --notest . 
+   npm install 
 fi           
 echo -e "Startup process completed.\nRun \"docker logs [containername]\" for details." > /www/$(echo $initfile)
 date >> /www/$(echo $initfile)
