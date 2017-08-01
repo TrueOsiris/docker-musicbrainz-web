@@ -12,7 +12,8 @@ docker create \
  -e PGID=1001 \
  -e PUID=1001 \
  -e TZ=Europe/Brussels \
- -e BRAINZCODE= \
+ -e BRAINZCODE=1234567890EXaMplE \
+ -e WEBURL=musicbrainz.mydomain.example \
  -p 5001:80 \
  -v /mnt/docker-dataset/musicbrainz/config:/config \
  -v /mnt/docker-dataset/musicbrainz/www:/www \
