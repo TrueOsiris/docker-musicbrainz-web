@@ -114,12 +114,13 @@ echo "Replace entries in /musicbrainz-server/lib/DBDefs.pm dependant on docker e
 sed -i 's/^[\ \t]\+database[\ \t]\+=>[\ \t]\+"musicbrainz_db"/ database \=\> \"musicbrainz\"/g' /musicbrainz-server/lib/DBDefs.pm
 sed -i 's/^[\ \t]\+username[\ \t]\+=>[\ \t]\+"musicbrainz"/ username \=\> \"'"$PGUSER"'\"/g' /musicbrainz-server/lib/DBDefs.pm
 sed -i 's/^[\#]\?[\ \t]\+password[\ \t]\+=>[\ \t]\+\"[a-zA-Z]*\",$/ password \=\> \"'"$PGPASS"'\",/g' /musicbrainz-server/lib/DBDefs.pm
-sed -i 's/^\#[\ \t]\+host[\ \t]\+=>[\ \t]\+""/ host \=\> \"'"$host"'\"/g' /musicbrainz-server/lib/DBDefs.pm
+sed -i 's/^\#[\ \t]\+host[\ \t]\+=>[\ \t]\+""/ host \=\> \"'"$dbhost"'\"/g' /musicbrainz-server/lib/DBDefs.pm
 sed -i 's/^\#[\ \t]\+port[\ \t]\+=>[\ \t]\+""/ port \=\> \"'"$port"'\"/g' /musicbrainz-server/lib/DBDefs.pm
 sed -i 's/^\#   MAINTENANCE/  MAINTENANCE/g' /musicbrainz-server/lib/DBDefs.pm
 sed -i 's/^\#\ \ \ }\,/   },/' /musicbrainz-server/lib/DBDefs.pm
 sed -i 's/^\# sub REPLICATION_TYPE { RT_STANDALONE }/ sub REPLICATION_TYPE { RT_SLAVE }/' /musicbrainz-server/lib/DBDefs.pm
 sed -i 's/^\# sub REPLICATION_ACCESS_TOKEN { "" }/ sub REPLICATION_ACCESS_TOKEN { "'"$BRAINZCODE"'" }/' /musicbrainz-server/lib/DBDefs.pm
+sed -i 's/^[\ \t]\+sub WEB_SERVER[\ \t]\+{ "www.musicbrainz.example.com" }/ sub WEB_SERVER { "'"$WEBURL"'" }
 
 if [ ! -f /www/$(echo $initfile) ]; then
    cd /musicbrainz-server
