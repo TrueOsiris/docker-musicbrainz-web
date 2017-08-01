@@ -120,7 +120,7 @@ sed -i 's/^\#   MAINTENANCE/  MAINTENANCE/g' /musicbrainz-server/lib/DBDefs.pm
 sed -i 's/^\#\ \ \ }\,/   },/' /musicbrainz-server/lib/DBDefs.pm
 sed -i 's/^\# sub REPLICATION_TYPE { RT_STANDALONE }/ sub REPLICATION_TYPE { RT_SLAVE }/' /musicbrainz-server/lib/DBDefs.pm
 sed -i 's/^\# sub REPLICATION_ACCESS_TOKEN { "" }/ sub REPLICATION_ACCESS_TOKEN { "'"$BRAINZCODE"'" }/' /musicbrainz-server/lib/DBDefs.pm
-sed -i 's/^[\ \t]\+sub WEB_SERVER[\ \t]\+{ "www.musicbrainz.example.com" }/ sub WEB_SERVER { "'"$WEBURL"'" }
+sed -i 's/^[\ \t]\+sub WEB_SERVER[\ \t]\+{ "www.musicbrainz.example.com" }/ sub WEB_SERVER { "'"$WEBURL"'" }/g' /musicbrainz-server/lib/DBDefs.pm
 
 if [ ! -f /www/$(echo $initfile) ]; then
    cd /musicbrainz-server
