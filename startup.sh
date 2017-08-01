@@ -116,6 +116,11 @@ sed -i 's/^[\ \t]\+username[\ \t]\+=>[\ \t]\+"musicbrainz"/ username \=\> \"'"$P
 sed -i 's/^[\#]\?[\ \t]\+password[\ \t]\+=>[\ \t]\+\"[a-zA-Z]*\",$/ password \=\> \"'"$PGPASS"'\",/g' /musicbrainz-server/lib/DBDefs.pm
 sed -i 's/^\#[\ \t]\+host[\ \t]\+=>[\ \t]\+""/ host \=\> \"'"$host"'\"/g' /musicbrainz-server/lib/DBDefs.pm
 sed -i 's/^\#[\ \t]\+port[\ \t]\+=>[\ \t]\+""/ port \=\> \"'"$port"'\"/g' /musicbrainz-server/lib/DBDefs.pm
+sed -i 's/^\#   MAINTENANCE/  MAINTENANCE/g' /musicbrainz-server/lib/DBDefs.pm
+sed -i 's/^\#\ \ \ \}\,/   },/' /musicbrainz-server/lib/DBDefs.pm
+sed -i 's/^\# sub REPLICATION_TYPE \{ RT_STANDALONE \}/ sub REPLICATION_TYPE \{ RT_SLAVE \}/' /musicbrainz-server/lib/DBDefs.pm
+sed -i 's/^\# sub REPLICATION_ACCESS_TOKEN \{ "" \}/ sub REPLICATION_ACCESS_TOKEN { "'"$BRAINZCODE"'" }/' /musicbrainz-server/lib/DBDefs.pm
+
 if [ ! -f /www/$(echo $initfile) ]; then
    cd /musicbrainz-server
    cpanm --installdeps --notest . 
