@@ -109,6 +109,11 @@ else
    echo "Creating Indexes and Primary Keys"
    run_sql_file /www/sqls/CreatePrimaryKeys.sql
    run_sql_file /www/sqls/CreateIndexes.sql
+fi 
+echo "Replace entries in /musicbrainz-server/lib/DBDefs.pm dependant on docker environment variables."
+sed 's/^\#[\ \t]\+host[\ \t]\+=>[\ \t]\+""/host \=\> "$host"/g' /musicbrainz-server/lib/DBDefs.pm
+sed 's/^\#[\ \t]\+port[\ \t]\+=>[\ \t]\+""/port \=\> "$port"/g' /musicbrainz-server/lib/DBDefs.pm
+if [ ! -f /www/$(echo $initfile) ]; then
    cd /musicbrainz-server
    cpanm --installdeps --notest . 
    npm install 
