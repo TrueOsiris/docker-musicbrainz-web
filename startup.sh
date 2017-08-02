@@ -138,7 +138,7 @@ sed -i 's/^\#\ \ \ }\,/   },/' /www/musicbrainz-server/lib/DBDefs.pm
 sed -i 's/^\# sub REPLICATION_TYPE { RT_STANDALONE }/ sub REPLICATION_TYPE { RT_SLAVE }/' /www/musicbrainz-server/lib/DBDefs.pm
 sed -i 's/^\# sub REPLICATION_ACCESS_TOKEN { "" }/ sub REPLICATION_ACCESS_TOKEN { "'"$BRAINZCODE"'" }/' /www/musicbrainz-server/lib/DBDefs.pm
 sed -i 's/^sub WEB_SERVER[\ \t]\+{ \"www.musicbrainz.example.com\" }/sub WEB_SERVER { \"'"$WEBURL"'\" }/g' /www/musicbrainz-server/lib/DBDefs.pm
-sed -i '/MUSICBRAINZ_USE_PROXY/a MUSICBRAINZ_USE_PROXY=1/' /www/musicbrainz-server/lib/DBDefs.pm
+sed -i '/MUSICBRAINZ_USE_PROXY/a MUSICBRAINZ_USE_PROXY=1' /www/musicbrainz-server/lib/DBDefs.pm
 
 if [ ! -f /www/$(echo $initfile) ]; then
    cd /www/musicbrainz-server
