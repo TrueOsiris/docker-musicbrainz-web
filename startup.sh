@@ -99,6 +99,8 @@ else
    run_sql_file /www/sqls/CreateTables.sql
    cd /www/dump/extracted
    if [ ! $(run_sql_query "t" "SELECT COUNT(*) FROM alternative_release_type;") == "3" ]; then
+      echo "Extracting..."
+      echo "If extraction gets interrupted, db container & web container need to be reinstalled."
       for f in mbdump/*
       do
          tablename="${f:7}"
@@ -106,6 +108,8 @@ else
          chmod a+rX $f
          run_sql_query "t" "\COPY $tablename FROM '/www/dump/extracted/$f'"
       done
+      echo "********************************************"
+      echo "Extraction complete!"
    fi
    cd /
    echo "Creating Indexes and Primary Keys"
@@ -127,7 +131,11 @@ sed -i '/MUSICBRAINZ_USE_PROXY/a MUSICBRAINZ_USE_PROXY=1/' /musicbrainz-server/l
 
 if [ ! -f /www/$(echo $initfile) ]; then
    cd /musicbrainz-server
+   echo "********************************************"
+   echo "Running 'cpanm --installdeps --notest .'"
    cpanm --installdeps --notest . 
+   echo "********************************************"
+   echo "Running 'npm install'"
    npm install 
 fi           
 echo -e "Startup process completed.\nRun \"docker logs [containername]\" for details." > /www/$(echo $initfile)
