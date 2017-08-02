@@ -116,21 +116,32 @@ else
    run_sql_file /www/sqls/CreatePrimaryKeys.sql
    run_sql_file /www/sqls/CreateIndexes.sql
 fi 
+if [ ! -d /www/musicbrainz-server ]; then
+   cd /www
+   echo "Downloading musicbrainz-server from github."
+   git clone --recursive git://github.com/metabrainz/musicbrainz-server.git 
+   cd musicbrainz-server 
+   cp lib/DBDefs.pm.sample lib/DBDefs.pm 
+   echo 'eval $( perl -Mlocal::lib )' >> ~/.bashrc  
+   /bin/bash -c "source ~/.bashrc" \
+   cd ..
+fi
+cp /www/musicbrainz-server/lib/DBDefs.pm.sample /www/musicbrainz-server/lib/DBDefs.pm
 echo "Replace entries in /musicbrainz-server/lib/DBDefs.pm dependant on docker environment variables."
-sed -i 's/^[\#]\?[\ \t]\+database[\ \t]\+=>[\ \t]\+"musicbrainz_db"/ database \=\> \"musicbrainz\"/g' /musicbrainz-server/lib/DBDefs.pm
-sed -i 's/^[\#]\?[\ \t]\+username[\ \t]\+=>[\ \t]\+"musicbrainz"/ username \=\> \"'"$PGUSER"'\"/g' /musicbrainz-server/lib/DBDefs.pm
-sed -i 's/^[\#]\?[\ \t]\+password[\ \t]\+=>[\ \t]\+\"[a-zA-Z0-9]*\",$/ password \=\> \"'"$PGPASS"'\",/g' /musicbrainz-server/lib/DBDefs.pm
-sed -i 's/^[\#]\?[\ \t]\+host[\ \t]\+=>[\ \t]\+\"[a-zA-Z0-9]*\",$/ host \=\> \"'"$dbhost"'\",/g' /musicbrainz-server/lib/DBDefs.pm
-sed -i 's/^[\#]\?[\ \t]\+port[\ \t]\+=>[\ \t]\+\"[a-zA-Z0-9]*\",$/ port \=\> \"'"$port"'\",/g' /musicbrainz-server/lib/DBDefs.pm
-sed -i 's/^\#   MAINTENANCE/  MAINTENANCE/g' /musicbrainz-server/lib/DBDefs.pm
-sed -i 's/^\#\ \ \ }\,/   },/' /musicbrainz-server/lib/DBDefs.pm
-sed -i 's/^\# sub REPLICATION_TYPE { RT_STANDALONE }/ sub REPLICATION_TYPE { RT_SLAVE }/' /musicbrainz-server/lib/DBDefs.pm
-sed -i 's/^\# sub REPLICATION_ACCESS_TOKEN { "" }/ sub REPLICATION_ACCESS_TOKEN { "'"$BRAINZCODE"'" }/' /musicbrainz-server/lib/DBDefs.pm
-sed -i 's/^sub WEB_SERVER[\ \t]\+{ \"www.musicbrainz.example.com\" }/sub WEB_SERVER { \"'"$WEBURL"'\" }/g' /musicbrainz-server/lib/DBDefs.pm
-sed -i '/MUSICBRAINZ_USE_PROXY/a MUSICBRAINZ_USE_PROXY=1/' /musicbrainz-server/lib/DBDefs.pm
+sed -i 's/^[\#]\?[\ \t]\+database[\ \t]\+=>[\ \t]\+"musicbrainz_db"/ database \=\> \"musicbrainz\"/g' /www/musicbrainz-server/lib/DBDefs.pm
+sed -i 's/^[\#]\?[\ \t]\+username[\ \t]\+=>[\ \t]\+"musicbrainz"/ username \=\> \"'"$PGUSER"'\"/g' /www/musicbrainz-server/lib/DBDefs.pm
+sed -i 's/^[\#]\?[\ \t]\+password[\ \t]\+=>[\ \t]\+\"[a-zA-Z0-9]*\",$/ password \=\> \"'"$PGPASS"'\",/g' /www/musicbrainz-server/lib/DBDefs.pm
+sed -i 's/^[\#]\?[\ \t]\+host[\ \t]\+=>[\ \t]\+\"[a-zA-Z0-9]*\",$/ host \=\> \"'"$dbhost"'\",/g' /www/musicbrainz-server/lib/DBDefs.pm
+sed -i 's/^[\#]\?[\ \t]\+port[\ \t]\+=>[\ \t]\+\"[a-zA-Z0-9]*\",$/ port \=\> \"'"$port"'\",/g' /www/musicbrainz-server/lib/DBDefs.pm
+sed -i 's/^\#   MAINTENANCE/  MAINTENANCE/g' /www/musicbrainz-server/lib/DBDefs.pm
+sed -i 's/^\#\ \ \ }\,/   },/' /www/musicbrainz-server/lib/DBDefs.pm
+sed -i 's/^\# sub REPLICATION_TYPE { RT_STANDALONE }/ sub REPLICATION_TYPE { RT_SLAVE }/' /www/musicbrainz-server/lib/DBDefs.pm
+sed -i 's/^\# sub REPLICATION_ACCESS_TOKEN { "" }/ sub REPLICATION_ACCESS_TOKEN { "'"$BRAINZCODE"'" }/' /www/musicbrainz-server/lib/DBDefs.pm
+sed -i 's/^sub WEB_SERVER[\ \t]\+{ \"www.musicbrainz.example.com\" }/sub WEB_SERVER { \"'"$WEBURL"'\" }/g' /www/musicbrainz-server/lib/DBDefs.pm
+sed -i '/MUSICBRAINZ_USE_PROXY/a MUSICBRAINZ_USE_PROXY=1/' /www/musicbrainz-server/lib/DBDefs.pm
 
 if [ ! -f /www/$(echo $initfile) ]; then
-   cd /musicbrainz-server
+   cd /www/musicbrainz-server
    echo "********************************************"
    echo "Running 'cpanm --installdeps --notest .'"
    cpanm --installdeps --notest . 
