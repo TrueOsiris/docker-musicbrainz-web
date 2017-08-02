@@ -55,23 +55,14 @@ RUN npm install -g npm
 RUN echo "Getting musicbrain git packages." \
  && git clone https://github.com/metabrainz/postgresql-musicbrainz-unaccent.git \
  && git clone https://github.com/metabrainz/postgresql-musicbrainz-collate.git \
- && git clone --recursive git://github.com/metabrainz/musicbrainz-server.git \
  && cd postgresql-musicbrainz-unaccent \
  && make \
  && make install \
  && cd ../postgresql-musicbrainz-collate \
  && make \
  && make install \
- && cd .. \
- && cd musicbrainz-server \
- && cp lib/DBDefs.pm.sample lib/DBDefs.pm \
- && echo 'eval $( perl -Mlocal::lib )' >> ~/.bashrc \ 
- && /bin/bash -c "source ~/.bashrc" \
- && cd ..
-#RUN cpanm --installdeps --notest . 
-#RUN npm install 
+ && cd .. 
  
-
 ### startup scripts ###
 
 #Pre-config scrip that maybe need to be run one time only when the container run the first time .. using a flag to don't 
