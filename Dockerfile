@@ -1,5 +1,5 @@
 # Musicbrainz docker
-FROM quantumobject/docker-baseimage:latest
+FROM quantumobject/docker-baseimage:17.10
 MAINTAINER Tim Chaubet "tim@chaubet.be"
 
 #quantumobject is a bit late, so replacing xenial by zesty myself
@@ -34,9 +34,9 @@ RUN apt-get update \
                        php7.0-gmp \
                        php7.0-pgsql \
                        php-mcrypt \
-                       postgresql-client-9.5 \
+                       postgresql-client-9.6 \
                        postgresql-common \
-                       postgresql-server-dev-9.5 \
+                       postgresql-server-dev-9.6 \
                        redis-server \
                        vim \
                        zip \
