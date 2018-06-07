@@ -42,8 +42,9 @@ RUN apt-get update \
                        zip \
  && apt-get -f -y install \
  && apt-get autoclean -y \
- && apt-get autoremove -y \
- && rm -rf /var/lib/apt/lists/* \
+ && apt-get autoremove -y 
+ 
+RUN rm -rf /var/lib/apt/lists/* \
  && rm -rf /tmp/* /var/tmp/* 
  
 # copy base config files
