@@ -1,8 +1,6 @@
 # Musicbrainz docker
 FROM quantumobject/docker-baseimage:17.10
 MAINTAINER Tim Chaubet "tim@chaubet.be"
-
-#quantumobject is a bit late, so replacing xenial by zesty myself
 #RUN sed -i 's/xenial/zesty/g' /etc/apt/sources.list
 
 ARG DEBIAN_FRONTEND=noninteractive
