@@ -34,9 +34,9 @@ RUN apt-get update \
                        php7.0-gmp \
                        php7.0-pgsql \
                        php-mcrypt \
-                       postgresql-client-9.6 \
+                       postgresql-client-9.5 \
                        postgresql-common \
-                       postgresql-server-dev-9.6 \
+                       postgresql-server-dev-9.5 \
                        redis-server \
                        vim \
                        zip \
