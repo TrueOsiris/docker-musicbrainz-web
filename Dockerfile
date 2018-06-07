@@ -25,7 +25,6 @@ RUN apt-get update \
                        libxml2-dev \
                        net-tools \
                        nodejs \
-                       nodejs-legacy \
                        npm \
                        php7.1 \
                        php7.1-mbstring \
@@ -41,7 +40,9 @@ RUN apt-get update \
  && apt-get -f -y install \
  && apt-get autoclean -y \
  && apt-get autoremove -y 
- 
+
+#                        nodejs-legacy \
+
 RUN rm -rf /var/lib/apt/lists/* \
  && rm -rf /tmp/* /var/tmp/* 
  
