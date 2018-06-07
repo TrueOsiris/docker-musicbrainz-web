@@ -15,7 +15,7 @@ RUN apt-get update \
                        htop \
                        iptables \
                        iputils-ping \
-                       libapache2-mod-php7.0 \
+                       libapache2-mod-php7.1 \
                        libdb-dev \
                        libexpat1-dev \
                        libicu-dev \
@@ -27,10 +27,10 @@ RUN apt-get update \
                        nodejs \
                        nodejs-legacy \
                        npm \
-                       php7.0 \
-                       php7.0-mbstring \
-                       php7.0-gmp \
-                       php7.0-pgsql \
+                       php7.1 \
+                       php7.1-mbstring \
+                       php7.1-gmp \
+                       php7.1-pgsql \
                        php-mcrypt \
                        postgresql-client-9.6 \
                        postgresql-common \
