@@ -116,8 +116,11 @@ else
    fi
    cd /
    echo "... Creating Indexes and Primary Keys"
+   echo "... Primary keys ..."
    run_sql_file /www/sqls/CreatePrimaryKeys.sql
+   echo "... Indexes ..."
    run_sql_file /www/sqls/CreateIndexes.sql
+   echo "... Done creating keys and indexes"
 fi 
 if [ ! -d /www/musicbrainz-server ]; then
    cd /www
