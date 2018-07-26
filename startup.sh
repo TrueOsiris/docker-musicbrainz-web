@@ -116,11 +116,16 @@ else
    fi
    cd /
    echo "... Creating Indexes and Primary Keys"
-   echo "... Primary keys ..."
-   run_sql_file /www/sqls/CreatePrimaryKeys.sql
-   echo "... Indexes ..."
-   run_sql_file /www/sqls/CreateIndexes.sql
-   echo "... Done creating keys and indexes"
+   if [ -f /www/index.created ]; then
+      echo "... Indexes and keys were already created."
+   else
+      echo "... Primary keys ..."
+      run_sql_file /www/sqls/CreatePrimaryKeys.sql
+      echo "... Indexes ..."
+      run_sql_file /www/sqls/CreateIndexes.sql
+      echo "... Done creating keys and indexes"
+      echo "... Done creating keys and indexes" > /www/index.created
+   fi
 fi 
 if [ ! -d /www/musicbrainz-server ]; then
    cd /www
@@ -156,5 +161,6 @@ if [ ! -f /www/$(echo $initfile) ]; then
    npm install 
 fi           
 echo -e "Startup process completed.\nRun \"docker logs [containername]\" for details." > /www/$(echo $initfile)
+rm /www/index.created
 date >> /www/$(echo $initfile)
 echo $(cat /www/$initfile)
