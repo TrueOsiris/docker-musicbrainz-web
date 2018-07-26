@@ -9,7 +9,7 @@ initfile=musicbrainz.initialised
 
 ### functions
 run_sql_file() {
-   echo "executing \"psql -h $dbhost -p $port -d musicbrainz -U $PGUSER -a -f $1\""
+   echo "... executing \"psql -h $dbhost -p $port -d musicbrainz -U $PGUSER -a -f $1\""
    PGOPTIONS='--client-min-messages=warning' psql -q -h $dbhost -p $port -d musicbrainz -U $PGUSER -a -f $1
 }
 export -f run_sql_file
@@ -39,7 +39,7 @@ if [ -f /www/$(echo $initfile) ]; then
         echo "initial configuration already done. Remove /www/$initfile if you want to rerun the initialization."
 else 
    if [ ! -e ~/.pgpass ]; then
-      echo creating ~/.pgpass
+      echo "creating ~/.pgpass"
       echo "$dbhost:$port:musicbrainz:$PGUSER:$PGPASS"  > ~/.pgpass
       chmod 0600 ~/.pgpass
    fi
@@ -48,77 +48,80 @@ else
    fi
    cd /www/sqls
    if [ ! -e "/www/sqls/Extensions.sql" ]; then
-      echo grabbing Extensions.sql
+      echo "grabbing Extensions.sql"
       wget --quiet https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/Extensions.sql
    fi
    if [ ! -e "/www/sqls/CreateTables.sql" ]; then 
-      echo grabbing CreateTables.sql
+      echo "grabbing CreateTables.sql"
       wget --quiet https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/CreateTables.sql
    fi
    if [ ! -e "/www/sqls/CreatePrimaryKeys.sql" ]; then 
-      echo grabbing CreatePrimaryKeys.sql
+      echo "grabbing CreatePrimaryKeys.sql"
       wget --quiet https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/CreatePrimaryKeys.sql
    fi
    if [ ! -e "/www/sqls/CreateIndexes.sql" ]; then
-      echo grabbing CreateIndexes.sql
+      echo "grabbing CreateIndexes.sql"
        wget --quiet https://raw.githubusercontent.com/metabrainz/musicbrainz-server/master/admin/sql/CreateIndexes.sql
    fi
    if [ ! -d /www/dump ]; then
        mkdir -p /www/dump
-       echo "Downloading last Musicbrainz dump"
+       echo "... Downloading last Musicbrainz dump"
    fi
    cd /www/dump
    if [ ! -e "/www/dump/LATEST" ]; then
        wget --quiet -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/LATEST
-       echo "Latest version is $(cat /www/dump/LATEST)"
+       echo "... Latest version is $(cat /www/dump/LATEST)"
    fi
    LATEST="$(cat /www/dump/LATEST)"
    if [ ! -e "/www/dump/mbdump-derived.tar.bz2" ]; then
-      echo grabbing mbdump-derived.tar.bz2
+      echo "... grabbing mbdump-derived.tar.bz2"
       wget --quiet -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/$LATEST/mbdump-derived.tar.bz2
    fi
    if [ ! -e "/www/dump/mbdump.tar.bz2" ]; then
-      echo grabbing mbdump.tar.bz2
+      echo "... grabbing mbdump.tar.bz2"
       wget --quiet -nd -nH -P /www/dump http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/$LATEST/mbdump.tar.bz2
    fi
    if [ ! -d /www/dump/extracted ]; then
       mkdir /www/dump/extracted
-      echo "Uncompressing Musicbrainz mbdump-derived.tar.bz2"
+      echo "... Uncompressing Musicbrainz mbdump-derived.tar.bz2"
       tar xjf /www/dump/mbdump-derived.tar.bz2 -C /www/dump/extracted
-      echo "Uncompressing Musicbrainz mbdump.tar.bz2"
+      echo "... Uncompressing Musicbrainz mbdump.tar.bz2"
       tar xjf /www/dump/mbdump.tar.bz2 -C /www/dump/extracted
    fi
    if [ $(run_sql_query "t" "SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = 'musicbrainz');") == "f" ]; then
-      echo "creating database schema musicbrainz"
+      echo "... creating database schema musicbrainz"
       run_sql_query "a" "CREATE SCHEMA musicbrainz"
    else
-      echo "database schema musicbrainz already exists"
+      echo "... database schema musicbrainz already exists"
    fi
    find /www/sqls/ -type f -exec bash -c 'sanitize_sql_file "{}"' \;
+   echo "... Running Extensions.sql"
    run_sql_file /www/sqls/Extensions.sql
+   echo "... Running CreateTables.sql"
    run_sql_file /www/sqls/CreateTables.sql
+   echo "... sqls finished."
    cd /www/dump/extracted
    if [ ! $(run_sql_query "t" "SELECT COUNT(*) FROM alternative_release_type;") == "3" ]; then
-      echo "Extracting..."
-      echo "If extraction gets interrupted, db container & web container need to be reinstalled."
+      echo "... Extracting..."
+      echo "... If extraction gets interrupted, db container & web container need to be reinstalled."
       for f in mbdump/*
       do
          tablename="${f:7}"
-         echo "Importing $tablename table using run_sql_query \"t\" \"COPY $tablename FROM '/www/dump/extracted/$f'\""
+         echo "... Importing $tablename table using run_sql_query \"t\" \"COPY $tablename FROM '/www/dump/extracted/$f'\""
          chmod a+rX $f
          run_sql_query "t" "\COPY $tablename FROM '/www/dump/extracted/$f'"
       done
       echo "********************************************"
-      echo "Extraction complete!"
+      echo "... Extraction complete!"
    fi
    cd /
-   echo "Creating Indexes and Primary Keys"
+   echo "... Creating Indexes and Primary Keys"
    run_sql_file /www/sqls/CreatePrimaryKeys.sql
    run_sql_file /www/sqls/CreateIndexes.sql
 fi 
 if [ ! -d /www/musicbrainz-server ]; then
    cd /www
-   echo "Downloading musicbrainz-server from github."
+   echo "... Downloading musicbrainz-server from github."
    git clone --recursive git://github.com/metabrainz/musicbrainz-server.git 
    cd musicbrainz-server 
    cp lib/DBDefs.pm.sample lib/DBDefs.pm 
@@ -143,10 +146,10 @@ sed -i '/MUSICBRAINZ_USE_PROXY/a MUSICBRAINZ_USE_PROXY=1' /www/musicbrainz-serve
 if [ ! -f /www/$(echo $initfile) ]; then
    cd /www/musicbrainz-server
    echo "********************************************"
-   echo "Running 'cpanm --installdeps --notest .'"
+   echo "... Running 'cpanm --installdeps --notest .'"
    cpanm --installdeps --notest . 
    echo "********************************************"
-   echo "Running 'npm install'"
+   echo "... Running 'npm install'"
    npm install 
 fi           
 echo -e "Startup process completed.\nRun \"docker logs [containername]\" for details." > /www/$(echo $initfile)
